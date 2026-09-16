@@ -1,18 +1,13 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { Columns2, Image as ImageIcon, Lock, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { InteractiveCanvas } from "@/components/proofsync/InteractiveCanvas";
 import { CompareSlider } from "@/components/proofsync/CompareSlider";
 import { ApproveDialog } from "@/components/proofsync/ApproveDialog";
 import { StatusBadge } from "@/components/proofsync/StatusBadge";
-import {
-  addPinByToken,
-  approveVersionByToken,
-  getReviewByToken,
-} from "@/lib/review.functions";
+import { addPinByToken, approveVersionByToken, getReviewByToken } from "@/lib/review.functions";
 import type { ReviewPayload } from "@/lib/proofsync-types";
 import { cn } from "@/lib/utils";
 
@@ -39,9 +34,6 @@ export const Route = createFileRoute("/review/$shareToken")({
 function ReviewPage() {
   const { shareToken } = Route.useParams();
   const queryClient = useQueryClient();
-  const fetchReview = useServerFn(getReviewByToken);
-  const addPin = useServerFn(addPinByToken);
-  const approve = useServerFn(approveVersionByToken);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mode, setMode] = useState<"single" | "compare">("single");
@@ -51,7 +43,7 @@ function ReviewPage() {
   const queryKey = ["review", shareToken];
   const { data, isLoading, isError } = useQuery<ReviewPayload | null>({
     queryKey,
-    queryFn: () => fetchReview({ data: { token: shareToken } }),
+    queryFn: () => getReviewByToken(shareToken),
   });
 
   const versions = data?.versions ?? [];
@@ -60,12 +52,11 @@ function ReviewPage() {
     [versions, selectedId],
   );
   const left = versions.find((v) => v.id === compareLeft) ?? versions[0];
-  const right =
-    versions.find((v) => v.id === compareRight) ?? versions[versions.length - 1];
+  const right = versions.find((v) => v.id === compareRight) ?? versions[versions.length - 1];
 
   const pinMutation = useMutation({
     mutationFn: (input: { versionId: string; x: number; y: number; comment: string }) =>
-      addPin({ data: { token: shareToken, ...input } }),
+      addPinByToken({ token: shareToken, ...input }),
     onSuccess: () => {
       toast.success("Nota enviada ao criador.");
       void queryClient.invalidateQueries({ queryKey });
@@ -75,7 +66,7 @@ function ReviewPage() {
 
   const approveMutation = useMutation({
     mutationFn: (input: { versionId: string; clientName: string }) =>
-      approve({ data: { token: shareToken, ...input } }),
+      approveVersionByToken({ token: shareToken, ...input }),
     onSuccess: () => {
       toast.success("Versão aprovada. Obrigado!");
       void queryClient.invalidateQueries({ queryKey });
@@ -108,9 +99,7 @@ function ReviewPage() {
               {pending} nota{pending === 1 ? "" : "s"} em aberto
             </span>
             {current.status === "approved" && current.approved_by_name && (
-              <span className="label-mono text-success">
-                por {current.approved_by_name}
-              </span>
+              <span className="label-mono text-success">por {current.approved_by_name}</span>
             )}
           </div>
         )}

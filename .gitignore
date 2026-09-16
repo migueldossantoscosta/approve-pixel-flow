@@ -1,6 +1,11 @@
 .env
 .env.local
 
+# Project uses Bun (bun.lock); ignore lockfiles from other package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
 # Logs
 logs
 *.log
