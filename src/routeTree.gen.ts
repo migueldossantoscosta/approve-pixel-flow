@@ -14,6 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as ReviewShareTokenRouteImport } from './routes/review.$shareToken'
+import { Route as AuthenticatedDeliverablesDeliverableIdRouteImport } from './routes/_authenticated/deliverables.$deliverableId'
+import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects.$projectId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,18 +41,34 @@ const ReviewShareTokenRoute = ReviewShareTokenRouteImport.update({
   path: '/review/$shareToken',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDeliverablesDeliverableIdRoute =
+  AuthenticatedDeliverablesDeliverableIdRouteImport.update({
+    id: '/deliverables/$deliverableId',
+    path: '/deliverables/$deliverableId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProjectsProjectIdRoute =
+  AuthenticatedProjectsProjectIdRouteImport.update({
+    id: '/projects/$projectId',
+    path: '/projects/$projectId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/review/$shareToken': typeof ReviewShareTokenRoute
+  '/deliverables/$deliverableId': typeof AuthenticatedDeliverablesDeliverableIdRoute
+  '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/review/$shareToken': typeof ReviewShareTokenRoute
+  '/deliverables/$deliverableId': typeof AuthenticatedDeliverablesDeliverableIdRoute
+  '/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +77,26 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/review/$shareToken': typeof ReviewShareTokenRoute
+  '/_authenticated/deliverables/$deliverableId': typeof AuthenticatedDeliverablesDeliverableIdRoute
+  '/_authenticated/projects/$projectId': typeof AuthenticatedProjectsProjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/review/$shareToken'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/review/$shareToken'
+    | '/deliverables/$deliverableId'
+    | '/projects/$projectId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/review/$shareToken'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/review/$shareToken'
+    | '/deliverables/$deliverableId'
+    | '/projects/$projectId'
   id:
     | '__root__'
     | '/'
@@ -72,6 +104,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/dashboard'
     | '/review/$shareToken'
+    | '/_authenticated/deliverables/$deliverableId'
+    | '/_authenticated/projects/$projectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,15 +152,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewShareTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/deliverables/$deliverableId': {
+      id: '/_authenticated/deliverables/$deliverableId'
+      path: '/deliverables/$deliverableId'
+      fullPath: '/deliverables/$deliverableId'
+      preLoaderRoute: typeof AuthenticatedDeliverablesDeliverableIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projects/$projectId': {
+      id: '/_authenticated/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDeliverablesDeliverableIdRoute: typeof AuthenticatedDeliverablesDeliverableIdRoute
+  AuthenticatedProjectsProjectIdRoute: typeof AuthenticatedProjectsProjectIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDeliverablesDeliverableIdRoute:
+    AuthenticatedDeliverablesDeliverableIdRoute,
+  AuthenticatedProjectsProjectIdRoute: AuthenticatedProjectsProjectIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
