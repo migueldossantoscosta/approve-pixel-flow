@@ -1,9 +1,3 @@
-# Design Proof (18)
-
-Age como um Engenheiro Full-Stack Sénior e Arquiteto de Software. O teu objetivo é construir uma aplicação web completa, responsiva e pronta para produção chamada "ProofSync".
-
----
-
 ### 1. VISÃO GERAL DO PRODUTO
 
 ProofSync é uma plataforma minimalista de revisão de design, controlo de versões e aprovação formal de trabalhos para freelancers e pequenos criadores visuais.
