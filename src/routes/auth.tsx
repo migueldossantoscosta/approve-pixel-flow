@@ -41,7 +41,7 @@ function AuthPage() {
       id: data.user.id,
       email: data.user.email ?? null,
       full_name:
-        (data.user.user_metadata?.["full_name"] as string | undefined) ?? fullName || null,
+        (data.user.user_metadata?.["full_name"] as string | undefined) ?? (fullName || null),
     });
   };
 
