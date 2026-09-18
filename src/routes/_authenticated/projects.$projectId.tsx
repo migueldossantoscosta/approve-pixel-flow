@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { addDeliverable, getProjectWithDeliverables } from "@/lib/local-db";
 import { StatusBadge } from "@/components/proofsync/StatusBadge";
 import type { VersionStatus } from "@/lib/proofsync-types";
+import { reviewLinkFor } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/projects/$projectId")({
   head: () => ({
@@ -44,7 +45,7 @@ function ProjectPage() {
   });
 
   const copyLink = async (shareToken: string) => {
-    const url = `${window.location.origin}/review/${shareToken}`;
+    const url = reviewLinkFor(shareToken);
     await navigator.clipboard.writeText(url);
     toast.success("Link do cliente copiado.");
   };

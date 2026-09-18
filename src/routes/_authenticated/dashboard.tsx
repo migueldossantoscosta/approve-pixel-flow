@@ -55,7 +55,7 @@ function Dashboard() {
           onClick={() => {
             localStorage.removeItem(DASHBOARD_UNLOCKED_KEY);
             queryClient.clear();
-            window.location.href = "/auth";
+            window.location.href = `${import.meta.env.BASE_URL}auth`;
           }}
           className="press label-mono inline-flex items-center gap-2 border border-border-strong bg-surface px-3 py-2 shadow-brutal-sm"
         >

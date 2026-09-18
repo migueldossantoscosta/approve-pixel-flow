@@ -8,7 +8,7 @@ import { InteractiveCanvas } from "@/components/proofsync/InteractiveCanvas";
 import { VersionUploader } from "@/components/proofsync/VersionUploader";
 import { StatusBadge } from "@/components/proofsync/StatusBadge";
 import type { FeedbackPin } from "@/lib/proofsync-types";
-import { cn } from "@/lib/utils";
+import { cn, reviewLinkFor } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/deliverables/$deliverableId")({
   head: () => ({
@@ -81,9 +81,7 @@ function DeliverablePage() {
         <button
           type="button"
           onClick={async () => {
-            await navigator.clipboard.writeText(
-              `${window.location.origin}/review/${data.deliverable.share_token}`,
-            );
+            await navigator.clipboard.writeText(reviewLinkFor(data.deliverable.share_token));
             toast.success("Link do cliente copiado.");
           }}
           className="press label-mono inline-flex items-center gap-1.5 border border-border-strong bg-surface px-3 py-2 shadow-brutal-sm"
