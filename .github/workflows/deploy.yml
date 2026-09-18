@@ -28,8 +28,6 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build
-        env:
-          VITE_DASHBOARD_PIN: ${{ vars.DASHBOARD_PIN }}
         run: bun run build
 
       - uses: actions/upload-pages-artifact@v3

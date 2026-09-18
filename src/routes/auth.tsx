@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
-import { DASHBOARD_UNLOCKED_KEY } from "@/lib/dashboard-lock";
+import { DASHBOARD_PIN, DASHBOARD_UNLOCKED_KEY } from "@/lib/dashboard-lock";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -26,12 +25,7 @@ function AuthPage() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const expected = import.meta.env["VITE_DASHBOARD_PIN"];
-    if (!expected) {
-      toast.error("PIN do painel não configurado (VITE_DASHBOARD_PIN).");
-      return;
-    }
-    if (pin !== expected) {
+    if (pin !== DASHBOARD_PIN) {
       setError("PIN incorreto.");
       return;
     }
