@@ -7,7 +7,7 @@ import { InteractiveCanvas } from "@/components/proofsync/InteractiveCanvas";
 import { CompareSlider } from "@/components/proofsync/CompareSlider";
 import { ApproveDialog } from "@/components/proofsync/ApproveDialog";
 import { StatusBadge } from "@/components/proofsync/StatusBadge";
-import { addPinByToken, approveVersionByToken, getReviewByToken } from "@/lib/review.functions";
+import { addPinByToken, approveVersionByToken, getReviewByToken } from "@/lib/local-db";
 import type { ReviewPayload } from "@/lib/proofsync-types";
 import { cn } from "@/lib/utils";
 

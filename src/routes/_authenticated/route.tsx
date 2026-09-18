@@ -1,11 +1,11 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
+import { DASHBOARD_UNLOCKED_KEY } from "@/lib/dashboard-lock";
 
 export const Route = createFileRoute("/_authenticated")({
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) throw redirect({ to: "/auth" });
-    return { user: data.user };
+  beforeLoad: () => {
+    if (localStorage.getItem(DASHBOARD_UNLOCKED_KEY) !== "true") {
+      throw redirect({ to: "/auth" });
+    }
   },
   component: () => <Outlet />,
 });

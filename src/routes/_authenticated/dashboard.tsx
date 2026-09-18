@@ -3,7 +3,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FolderPlus, Loader2, LogOut, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { createProject as createLocalProject, listProjects } from "@/lib/local-db";
+import { DASHBOARD_UNLOCKED_KEY } from "@/lib/dashboard-lock";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -27,31 +28,12 @@ function Dashboard() {
 
   const { data: projects, isLoading } = useQuery({
     queryKey: ["projects"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("projects")
-        .select("id, title, client_name, created_at, deliverables(id)")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
+    queryFn: listProjects,
   });
 
   const createProject = useMutation({
-    mutationFn: async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error("Sessão expirada.");
-      await supabase.from("profiles").upsert({
-        id: userData.user.id,
-        email: userData.user.email ?? null,
-      });
-      const { error } = await supabase.from("projects").insert({
-        creator_id: userData.user.id,
-        title: title.trim(),
-        client_name: clientName.trim() || null,
-      });
-      if (error) throw error;
-    },
+    mutationFn: () =>
+      createLocalProject({ title: title.trim(), client_name: clientName.trim() || null }),
     onSuccess: () => {
       setTitle("");
       setClientName("");
@@ -70,8 +52,8 @@ function Dashboard() {
         </div>
         <button
           type="button"
-          onClick={async () => {
-            await supabase.auth.signOut();
+          onClick={() => {
+            localStorage.removeItem(DASHBOARD_UNLOCKED_KEY);
             queryClient.clear();
             window.location.href = "/auth";
           }}

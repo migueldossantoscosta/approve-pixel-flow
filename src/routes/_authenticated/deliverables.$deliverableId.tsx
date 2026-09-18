@@ -3,11 +3,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Copy } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { getDeliverableWithVersions, togglePinResolved } from "@/lib/local-db";
 import { InteractiveCanvas } from "@/components/proofsync/InteractiveCanvas";
 import { VersionUploader } from "@/components/proofsync/VersionUploader";
 import { StatusBadge } from "@/components/proofsync/StatusBadge";
-import type { DeliverableVersion, FeedbackPin, VersionStatus } from "@/lib/proofsync-types";
+import type { FeedbackPin } from "@/lib/proofsync-types";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/deliverables/$deliverableId")({
@@ -33,48 +33,11 @@ function DeliverablePage() {
   const queryKey = ["deliverable", deliverableId];
   const { data, isLoading } = useQuery({
     queryKey,
-    queryFn: async () => {
-      const { data: deliverable, error } = await supabase
-        .from("deliverables")
-        .select(
-          "id, title, share_token, project_id, projects(title, client_name), versions(id, version_number, image_url, status, approved_at, approved_by_name, created_at, feedback_pins(id, x_coord_pct, y_coord_pct, comment, author_name, is_resolved, created_at))",
-        )
-        .eq("id", deliverableId)
-        .single();
-      if (error) throw error;
-
-      const versions: DeliverableVersion[] = await Promise.all(
-        [...(deliverable.versions ?? [])]
-          .sort((a, b) => a.version_number - b.version_number)
-          .map(async (v) => {
-            const { data: signed } = await supabase.storage
-              .from("deliverables")
-              .createSignedUrl(v.image_url, 60 * 60 * 2);
-            return {
-              id: v.id,
-              version_number: v.version_number,
-              image_url: signed?.signedUrl ?? "",
-              status: v.status as VersionStatus,
-              approved_at: v.approved_at,
-              approved_by_name: v.approved_by_name,
-              created_at: v.created_at,
-              pins: (v.feedback_pins ?? []) as FeedbackPin[],
-            };
-          }),
-      );
-
-      return { deliverable, versions };
-    },
+    queryFn: () => getDeliverableWithVersions(deliverableId),
   });
 
   const toggleResolved = useMutation({
-    mutationFn: async (pin: FeedbackPin) => {
-      const { error } = await supabase
-        .from("feedback_pins")
-        .update({ is_resolved: !pin.is_resolved })
-        .eq("id", pin.id);
-      if (error) throw error;
-    },
+    mutationFn: (pin: FeedbackPin) => togglePinResolved(pin.id),
     onSuccess: () => void queryClient.invalidateQueries({ queryKey }),
     onError: (e) => toast.error(e instanceof Error ? e.message : "Não foi possível atualizar."),
   });

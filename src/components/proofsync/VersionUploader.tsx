@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Loader2, UploadCloud } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { addVersion } from "@/lib/local-db";
 import { cn } from "@/lib/utils";
 
 const ACCEPTED = ["image/png", "image/jpeg", "image/webp"];
@@ -28,36 +28,8 @@ export function VersionUploader({
     }
     setBusy(true);
     try {
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError || !userData.user) throw new Error("Sessão expirada.");
-
-      // Re-read the highest version at upload time so parallel uploads stay sequential.
-      const { data: last } = await supabase
-        .from("versions")
-        .select("version_number")
-        .eq("deliverable_id", deliverableId)
-        .order("version_number", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      const versionNumber = (last?.version_number ?? 0) + 1;
-
-      const ext = file.name.split(".").pop()?.toLowerCase() ?? "png";
-      const path = `${userData.user.id}/${deliverableId}/v${versionNumber}-${Date.now()}.${ext}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("deliverables")
-        .upload(path, file, { contentType: file.type, upsert: false });
-      if (uploadError) throw uploadError;
-
-      const { error: insertError } = await supabase.from("versions").insert({
-        deliverable_id: deliverableId,
-        version_number: versionNumber,
-        image_url: path,
-        status: "pending_review",
-      });
-      if (insertError) throw insertError;
-
-      toast.success(`V${versionNumber} enviada.`);
+      await addVersion(deliverableId, file);
+      toast.success(`V${nextVersionNumber} enviada.`);
       onUploaded();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "O envio falhou.");

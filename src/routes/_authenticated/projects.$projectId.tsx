@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Check, Copy, Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { addDeliverable, getProjectWithDeliverables } from "@/lib/local-db";
 import { StatusBadge } from "@/components/proofsync/StatusBadge";
 import type { VersionStatus } from "@/lib/proofsync-types";
 
@@ -30,26 +30,11 @@ function ProjectPage() {
   const queryKey = ["project", projectId];
   const { data, isLoading } = useQuery({
     queryKey,
-    queryFn: async () => {
-      const { data: project, error } = await supabase
-        .from("projects")
-        .select(
-          "id, title, client_name, deliverables(id, title, share_token, created_at, versions(id, version_number, status, feedback_pins(id, is_resolved)))",
-        )
-        .eq("id", projectId)
-        .single();
-      if (error) throw error;
-      return project;
-    },
+    queryFn: () => getProjectWithDeliverables(projectId),
   });
 
-  const addDeliverable = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase
-        .from("deliverables")
-        .insert({ project_id: projectId, title: newTitle.trim() });
-      if (error) throw error;
-    },
+  const addDeliverableMutation = useMutation({
+    mutationFn: () => addDeliverable(projectId, newTitle.trim()),
     onSuccess: () => {
       setNewTitle("");
       toast.success("Entregável criado.");
@@ -82,16 +67,14 @@ function ProjectPage() {
 
       <header className="mt-4 border border-border-strong bg-card p-5 shadow-brutal">
         <h1 className="text-2xl font-bold sm:text-3xl">{data.title}</h1>
-        <p className="label-mono mt-1 text-muted-foreground">
-          {data.client_name ?? "sem cliente"}
-        </p>
+        <p className="label-mono mt-1 text-muted-foreground">{data.client_name ?? "sem cliente"}</p>
       </header>
 
       <form
         className="mt-6 flex flex-col gap-3 border border-border-strong bg-card p-5 shadow-brutal sm:flex-row"
         onSubmit={(e) => {
           e.preventDefault();
-          if (newTitle.trim()) addDeliverable.mutate();
+          if (newTitle.trim()) addDeliverableMutation.mutate();
         }}
       >
         <input
@@ -103,10 +86,10 @@ function ProjectPage() {
         />
         <button
           type="submit"
-          disabled={addDeliverable.isPending}
+          disabled={addDeliverableMutation.isPending}
           className="press inline-flex items-center justify-center gap-2 border border-primary bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-brutal-sm disabled:opacity-50"
         >
-          {addDeliverable.isPending ? (
+          {addDeliverableMutation.isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             <Plus className="h-4 w-4" />
