@@ -5,7 +5,7 @@ import { DASHBOARD_PIN, DASHBOARD_UNLOCKED_KEY } from "@/lib/dashboard-lock";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar — ProofSync" },
+      { title: "Entrar — Aprova." },
       { name: "description", content: "Introduz o PIN para aceder ao painel do criador." },
     ],
   }),
@@ -36,7 +36,7 @@ function AuthPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-12">
       <div className="w-full max-w-md border border-border-strong bg-card p-6 shadow-brutal">
-        <p className="label-mono text-primary">ProofSync</p>
+        <p className="label-mono text-primary">Aprova.</p>
         <h1 className="mt-1 text-2xl font-bold">Entrar</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Painel do criador. Os teus clientes não precisam de conta.

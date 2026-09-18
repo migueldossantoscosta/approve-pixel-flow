@@ -13,12 +13,12 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/deliverables/$deliverableId")({
   head: () => ({
     meta: [
-      { title: "Versões do entregável — ProofSync" },
+      { title: "Versões do entregável — Aprova." },
       {
         name: "description",
         content: "Envia novas versões, lê as notas do cliente e marca-as como resolvidas.",
       },
-      { property: "og:title", content: "Versões do entregável — ProofSync" },
+      { property: "og:title", content: "Versões do entregável — Aprova." },
       { property: "og:description", content: "Controlo de versões e feedback visual." },
     ],
   }),

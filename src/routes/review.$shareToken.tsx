@@ -14,13 +14,13 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/review/$shareToken")({
   head: () => ({
     meta: [
-      { title: "Revisão de design — ProofSync" },
+      { title: "Revisão de design — Aprova." },
       {
         name: "description",
         content:
           "Vê o trabalho, deixa notas visuais diretamente na imagem e aprova a versão final. Sem criar conta.",
       },
-      { property: "og:title", content: "Revisão de design — ProofSync" },
+      { property: "og:title", content: "Revisão de design — Aprova." },
       {
         property: "og:description",
         content: "Notas visuais e aprovação formal num único link.",
@@ -85,7 +85,7 @@ function ReviewPage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
       <header className="border border-border-strong bg-card p-5 shadow-brutal">
-        <p className="label-mono text-muted-foreground">ProofSync · revisão</p>
+        <p className="label-mono text-muted-foreground">Aprova. · revisão</p>
         <h1 className="mt-1 text-2xl font-bold sm:text-3xl">{data.deliverable.title}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {data.project.title}

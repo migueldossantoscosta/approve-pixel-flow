@@ -9,7 +9,7 @@ function Index() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
       <div className="w-full max-w-2xl text-center">
-        <p className="label-mono text-primary">ProofSync</p>
+        <p className="label-mono text-primary">Aprova.</p>
         <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
           Revisão de design, feita para aprovar.
         </h1>

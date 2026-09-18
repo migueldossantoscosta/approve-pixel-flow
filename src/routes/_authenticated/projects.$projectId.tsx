@@ -10,12 +10,12 @@ import type { VersionStatus } from "@/lib/proofsync-types";
 export const Route = createFileRoute("/_authenticated/projects/$projectId")({
   head: () => ({
     meta: [
-      { title: "Entregáveis do projeto — ProofSync" },
+      { title: "Entregáveis do projeto — Aprova." },
       {
         name: "description",
         content: "Entregáveis, versões e links de revisão deste projeto.",
       },
-      { property: "og:title", content: "Entregáveis do projeto — ProofSync" },
+      { property: "og:title", content: "Entregáveis do projeto — Aprova." },
       { property: "og:description", content: "Gestão de versões e aprovações." },
     ],
   }),

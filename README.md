@@ -1,6 +1,6 @@
 ### 1. VISÃO GERAL DO PRODUTO
 
-ProofSync é uma plataforma minimalista de revisão de design, controlo de versões e aprovação formal de trabalhos para freelancers e pequenos criadores visuais.
+Aprova. é uma plataforma minimalista de revisão de design, controlo de versões e aprovação formal de trabalhos para freelancers e pequenos criadores visuais.
 
 * O Criador gere projetos, envia versões de ficheiros e monitoriza estados.
 

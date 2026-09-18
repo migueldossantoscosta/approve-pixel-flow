@@ -9,13 +9,13 @@ import { DASHBOARD_UNLOCKED_KEY } from "@/lib/dashboard-lock";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Projetos — ProofSync" },
+      { title: "Projetos — Aprova." },
       {
         name: "description",
         content: "Gere projetos, entregáveis e links de revisão para os teus clientes.",
       },
-      { property: "og:title", content: "Projetos — ProofSync" },
-      { property: "og:description", content: "Painel do criador no ProofSync." },
+      { property: "og:title", content: "Projetos — Aprova." },
+      { property: "og:description", content: "Painel do criador no Aprova." },
     ],
   }),
   component: Dashboard,
@@ -47,7 +47,7 @@ function Dashboard() {
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="label-mono text-primary">ProofSync</p>
+          <p className="label-mono text-primary">Aprova.</p>
           <h1 className="text-3xl font-bold">Projetos</h1>
         </div>
         <button
